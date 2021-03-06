@@ -43,7 +43,7 @@ public class NewDates extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent in = new Intent(getActivity(), DateCreate.class);
-                startActivity(in); // Start date creation
+                startActivityForResult(in, 0); // Start date creation
             }
         });
 

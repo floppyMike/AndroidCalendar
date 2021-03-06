@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="TextView"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,16 +22,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:onClick="selectDate"
         android:text="Date"
         app:layout_constraintEnd_toStartOf="@+id/add_datebutton"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_dateview" />
+        app:layout_constraintTop_toBottomOf="@+id/add_timeview" />
 
     <Button
         android:id="@+id/add_datebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="selectTime"
         android:text="Time"
         app:layout_constraintBaseline_toBaselineOf="@+id/add_timebutton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,5 +63,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/add_timeview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_dateview" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
