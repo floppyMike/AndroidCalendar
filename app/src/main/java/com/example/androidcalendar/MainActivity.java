@@ -1,9 +1,12 @@
 package com.example.androidcalendar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
@@ -38,5 +41,21 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }).attach();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK)
+            switch (requestCode) {
+                case 0:
+                    addDate(data);
+                    break;
+            }
+    }
+
+    private void addDate(Intent data) {
+
     }
 }
