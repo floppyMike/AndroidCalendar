@@ -16,6 +16,8 @@ import android.view.ViewGroup;
  */
 public class NewDates extends Fragment {
 
+    private DateList m_list;
+
     public NewDates() {
         // Required empty public constructor
     }
@@ -37,6 +39,9 @@ public class NewDates extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_new_dates, container, false);
+
+        // Setup list
+        m_list = new DateList(v.findViewById(R.id.new_list));
 
         // Add click listener
         v.findViewById(R.id.newdate).setOnClickListener(new View.OnClickListener() {
