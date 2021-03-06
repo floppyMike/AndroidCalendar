@@ -3,6 +3,7 @@ package com.example.androidcalendar;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
@@ -17,6 +18,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout m_tablayout;
     private ViewPager2 m_viewpager;
 
+    private DB m_db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         // Get ids
         m_tablayout = (TabLayout) findViewById(R.id.tablayout);
         m_viewpager = (ViewPager2) findViewById(R.id.viewpager);
+
+        // Create DB
+        m_db = Room.databaseBuilder(getApplicationContext(), DB.class, "Dates").allowMainThreadQueries().build();
 
         // Setup the tab layout
         m_viewpager.setAdapter(new PagerAdaptor(this));

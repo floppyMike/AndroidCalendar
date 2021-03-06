@@ -17,4 +17,7 @@ public class Entry {
 
     @ColumnInfo
     public Calendar date;
+
+    @ColumnInfo
+    public int importance;
 }
