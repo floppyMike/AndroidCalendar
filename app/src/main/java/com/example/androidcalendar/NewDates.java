@@ -1,5 +1,6 @@
 package com.example.androidcalendar;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -35,6 +36,17 @@ public class NewDates extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_new_dates, container, false);
+        View v = inflater.inflate(R.layout.fragment_new_dates, container, false);
+
+        // Add click listener
+        v.findViewById(R.id.newdate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent(getActivity(), DateCreate.class);
+                startActivity(in); // Start date creation
+            }
+        });
+
+        return v;
     }
 }

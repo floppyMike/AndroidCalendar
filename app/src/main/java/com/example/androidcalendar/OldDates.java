@@ -19,7 +19,6 @@ public class OldDates extends Fragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static OldDates newInstance() {
         OldDates fragment = new OldDates();
         Bundle args = new Bundle();

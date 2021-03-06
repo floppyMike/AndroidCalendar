@@ -11,8 +11,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
-    TabLayout m_tablayout;
-    ViewPager2 m_viewpager;
+    private TabLayout m_tablayout;
+    private ViewPager2 m_viewpager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
