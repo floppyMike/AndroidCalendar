@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
 import java.util.List;
+import java.util.function.LongBinaryOperator;
 
 public class DateListAdapter extends RecyclerView.Adapter<DateListAdapter.ViewHolder> {
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title, date;
 
         public ViewHolder(View v) {
@@ -23,13 +24,13 @@ public class DateListAdapter extends RecyclerView.Adapter<DateListAdapter.ViewHo
         }
     }
 
-    private SortedList<Entry> m_entries;
+    private final SortedList<Entry> m_entries;
 
-    public DateListAdapter() {
-        m_entries = new SortedList<Entry>(Entry.class, new SortedList.Callback<Entry>() {
+    public DateListAdapter(LongBinaryOperator op) {
+        m_entries = new SortedList<>(Entry.class, new SortedList.Callback<Entry>() {
             @Override
             public int compare(Entry o1, Entry o2) {
-                return Long.compare(o1.date.getTime().getTime(), o2.date.getTime().getTime());
+                return (int) op.applyAsLong(o1.date.getTime().getTime(), o2.date.getTime().getTime());
             }
 
             @Override
@@ -80,8 +81,8 @@ public class DateListAdapter extends RecyclerView.Adapter<DateListAdapter.ViewHo
         return m_entries.get(i);
     }
 
-    public Entry remove(int i) {
-        return m_entries.removeItemAt(i);
+    public void remove(int i) {
+        m_entries.removeItemAt(i);
     }
 
     @NonNull

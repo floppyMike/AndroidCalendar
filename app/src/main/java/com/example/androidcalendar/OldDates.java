@@ -1,22 +1,23 @@
 package com.example.androidcalendar;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OldDates#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class OldDates extends Fragment {
+import java.util.Calendar;
+
+public class OldDates extends DateList {
 
     public OldDates() {
-        // Required empty public constructor
     }
 
     public static OldDates newInstance() {
@@ -27,14 +28,15 @@ public class OldDates extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_old_dates, container, false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_old_dates, container, false);
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        RecyclerView rv = v.findViewById(R.id.old_list);
+        DAO dao = DB.getInstance().dao();
+        super.onViewCreated(v, savedInstanceState, rv, (v1, v2) -> Long.compare(v2, v1), dao.allPast(Calendar.getInstance())); // Handle event fully
     }
 }

@@ -1,6 +1,12 @@
 package com.example.androidcalendar;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,35 +15,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.function.LongBinaryOperator;
 
-public class DateList {
-    private RecyclerView m_rv;
+public class DateList extends Fragment {
+    private DAO m_dao;
     private DateListAdapter m_da;
 
-    DateList(RecyclerView rv) {
-        // Add ids
-        m_rv = rv;
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState, RecyclerView rv,
+                              LongBinaryOperator comp, List<Entry> values) {
+        super.onViewCreated(v, savedInstanceState);
+
+        // Setup list
+        m_dao = DB.getInstance().dao();
+        m_da = new DateListAdapter(comp);
 
         // Add vertical lines
-        m_rv.addItemDecoration(new DividerItemDecoration(m_rv.getContext(), DividerItemDecoration.VERTICAL));
+        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), DividerItemDecoration.VERTICAL));
 
-        // Create list adapter
-        m_da = new DateListAdapter();
+        // Add from db
+        m_da.add(values);
 
-        // Add swipe delete
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
+        rv.setAdapter(m_da);
+        rv.setLayoutManager(new LinearLayoutManager(rv.getContext())); // Linear list
+    }
 
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                m_da.remove(viewHolder.getAdapterPosition());
-            }
-        }).attachToRecyclerView(m_rv);
+    public void addDate(String text, Calendar time) {
+        Entry e = new Entry(text, time, 0);
+        m_dao.insert(e);
+        m_da.add(e);
+    }
 
-        m_rv.setAdapter(m_da);
-        m_rv.setLayoutManager(new LinearLayoutManager(m_rv.getContext())); // Linear list
+    public void removeDate(int i) {
+        m_dao.delete(m_da.get(i));
+        m_da.remove(i);
     }
 }

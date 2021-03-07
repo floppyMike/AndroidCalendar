@@ -19,19 +19,11 @@ import android.view.ViewGroup;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NewDates#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class NewDates extends Fragment {
-
-    private DateListAdapter m_da;
-    private DAO m_dao;
+public class NewDates extends DateList {
 
     public NewDates() {
-        // Required empty public constructor
     }
 
     public static NewDates newInstance() {
@@ -42,36 +34,22 @@ public class NewDates extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_new_dates, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(v, savedInstanceState);
-
-        // Setup list
         RecyclerView rv = v.findViewById(R.id.new_list);
-        m_dao = DB.getInstance().dao();
-        m_da = new DateListAdapter();
+        DAO dao = DB.getInstance().dao();
+
+        super.onViewCreated(v, savedInstanceState, rv, (v1, v2) -> Long.compare(v1, v2), dao.allFuture(Calendar.getInstance())); // Handle event fully
 
         // Add click listener
-        v.findViewById(R.id.newdate).setOnClickListener(v1 -> {
+        rv.setOnClickListener(v1 -> {
             startActivityForResult(new Intent(getActivity(), DateCreate.class), 0); // Start date creation
         });
-
-        // Add vertical lines
-        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), DividerItemDecoration.VERTICAL));
-
-        // Add from db
-        m_da.add(m_dao.all());
 
         // Add swipe delete
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -85,9 +63,6 @@ public class NewDates extends Fragment {
                 removeDate(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(rv);
-
-        rv.setAdapter(m_da);
-        rv.setLayoutManager(new LinearLayoutManager(rv.getContext())); // Linear list
     }
 
     @Override
@@ -100,16 +75,5 @@ public class NewDates extends Fragment {
                     addDate(data.getStringExtra("text"), (Calendar) data.getSerializableExtra("date"));
                     break;
             }
-    }
-
-    public void addDate(String text, Calendar time) {
-        Entry e = new Entry(text, time, 0);
-        m_dao.insert(e);
-        m_da.add(e);
-    }
-
-    public void removeDate(int i) {
-        m_dao.delete(m_da.get(i));
-        m_da.remove(i);
     }
 }
