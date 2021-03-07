@@ -15,26 +15,21 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TabLayout m_tablayout;
-    private ViewPager2 m_viewpager;
-
-    private DB m_db;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Get ids
-        m_tablayout = (TabLayout) findViewById(R.id.tablayout);
-        m_viewpager = (ViewPager2) findViewById(R.id.viewpager);
+        // Create db
+        DB.build(this);
 
-        // Create DB
-        m_db = Room.databaseBuilder(getApplicationContext(), DB.class, "Dates").allowMainThreadQueries().build();
+        // Get ids
+        TabLayout tablayout = (TabLayout) findViewById(R.id.tablayout);
+        ViewPager2 viewpager = (ViewPager2) findViewById(R.id.viewpager);
 
         // Setup the tab layout
-        m_viewpager.setAdapter(new PagerAdaptor(this));
-        new TabLayoutMediator(m_tablayout, m_viewpager, new TabLayoutMediator.TabConfigurationStrategy() {
+        viewpager.setAdapter(new PagerAdaptor(this));
+        new TabLayoutMediator(tablayout, viewpager, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 switch (position) {
@@ -52,16 +47,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == Activity.RESULT_OK)
-            switch (requestCode) {
-                case 0:
-                    addDate(data);
-                    break;
-            }
-    }
-
-    private void addDate(Intent data) {
-
     }
 }

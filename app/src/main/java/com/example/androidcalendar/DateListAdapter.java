@@ -64,12 +64,20 @@ public class DateListAdapter extends RecyclerView.Adapter<DateListAdapter.ViewHo
         }); // Create sorter
     }
 
-    public void add(Entry[] l) {
+    public void add(List<Entry> l) {
         m_entries.beginBatchedUpdates();
         for (Entry e : l) {
             m_entries.add(e);
         }
         m_entries.endBatchedUpdates();
+    }
+
+    public void add(Entry l) {
+        m_entries.add(l);
+    }
+
+    public Entry get(int i) {
+        return m_entries.get(i);
     }
 
     public Entry remove(int i) {

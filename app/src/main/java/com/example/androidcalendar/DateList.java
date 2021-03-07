@@ -24,17 +24,6 @@ public class DateList {
         // Create list adapter
         m_da = new DateListAdapter();
 
-        // Test list
-        Entry e1 = new Entry();
-        e1.text = "Test1";
-        e1.date = Calendar.getInstance();
-
-        Entry e2 = new Entry();
-        e2.text = "Test2";
-        e2.date = Calendar.getInstance();
-
-        m_da.add(new Entry[]{e1, e2});
-
         // Add swipe delete
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             @Override

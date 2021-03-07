@@ -1,9 +1,11 @@
 package com.example.androidcalendar;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -14,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -23,8 +27,8 @@ import java.util.Calendar;
  */
 public class NewDates extends Fragment {
 
-    private RecyclerView m_rv;
     private DateListAdapter m_da;
+    private DAO m_dao;
 
     public NewDates() {
         // Required empty public constructor
@@ -46,33 +50,28 @@ public class NewDates extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_new_dates, container, false);
+        return inflater.inflate(R.layout.fragment_new_dates, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View v, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(v, savedInstanceState);
 
         // Setup list
-        m_rv = v.findViewById(R.id.new_list);
+        RecyclerView rv = v.findViewById(R.id.new_list);
+        m_dao = DB.getInstance().dao();
+        m_da = new DateListAdapter();
 
         // Add click listener
         v.findViewById(R.id.newdate).setOnClickListener(v1 -> {
-            Intent in = new Intent(getActivity(), DateCreate.class);
-            startActivityForResult(in, 0); // Start date creation
+            startActivityForResult(new Intent(getActivity(), DateCreate.class), 0); // Start date creation
         });
 
         // Add vertical lines
-        m_rv.addItemDecoration(new DividerItemDecoration(m_rv.getContext(), DividerItemDecoration.VERTICAL));
+        rv.addItemDecoration(new DividerItemDecoration(rv.getContext(), DividerItemDecoration.VERTICAL));
 
-        // Create list adapter
-        m_da = new DateListAdapter();
-
-        // Test list
-        Entry e1 = new Entry();
-        e1.text = "Test1";
-        e1.date = Calendar.getInstance();
-
-        Entry e2 = new Entry();
-        e2.text = "Test2";
-        e2.date = Calendar.getInstance();
-
-        m_da.add(new Entry[]{e1, e2});
+        // Add from db
+        m_da.add(m_dao.all());
 
         // Add swipe delete
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -83,13 +82,34 @@ public class NewDates extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                m_da.remove(viewHolder.getAdapterPosition());
+                removeDate(viewHolder.getAdapterPosition());
             }
-        }).attachToRecyclerView(m_rv);
+        }).attachToRecyclerView(rv);
 
-        m_rv.setAdapter(m_da);
-        m_rv.setLayoutManager(new LinearLayoutManager(m_rv.getContext())); // Linear list
+        rv.setAdapter(m_da);
+        rv.setLayoutManager(new LinearLayoutManager(rv.getContext())); // Linear list
+    }
 
-        return v;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK)
+            switch (requestCode) {
+                case 0:
+                    addDate(data.getStringExtra("text"), (Calendar) data.getSerializableExtra("date"));
+                    break;
+            }
+    }
+
+    public void addDate(String text, Calendar time) {
+        Entry e = new Entry(text, time, 0);
+        m_dao.insert(e);
+        m_da.add(e);
+    }
+
+    public void removeDate(int i) {
+        m_dao.delete(m_da.get(i));
+        m_da.remove(i);
     }
 }

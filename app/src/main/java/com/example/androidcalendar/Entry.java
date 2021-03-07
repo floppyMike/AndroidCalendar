@@ -9,8 +9,17 @@ import java.util.Date;
 
 @Entity
 public class Entry {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     public int id;
+
+    public Entry() {
+    }
+
+    public Entry(String t, Calendar d, int imp) {
+        text = t;
+        date = d;
+        importance = imp;
+    }
 
     @ColumnInfo
     public String text;
