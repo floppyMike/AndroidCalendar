@@ -44,7 +44,7 @@ public class DateListAdapter extends RecyclerView.Adapter<DateListAdapter.ViewHo
 
             @Override
             public boolean areItemsTheSame(Entry item1, Entry item2) {
-                return item1.date.equals(item2.date) && item1.text.equals(item2.text);
+                return item1.id == item2.id;
             }
 
             @Override
