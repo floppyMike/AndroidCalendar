@@ -1,10 +1,12 @@
 package com.example.androidcalendar;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
@@ -96,7 +98,24 @@ public class DateListAdapter extends RecyclerView.Adapter<DateListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Entry e = m_entries.get(position);
 
+        int c;
+        switch (e.importance) {
+            case 0:
+                c = Color.DKGRAY;
+                break;
+            case 1:
+                c = Color.BLUE;
+                break;
+            case 2:
+                c = Color.MAGENTA;
+                break;
+            default:
+                c = Color.RED;
+                break;
+        }
+
         holder.title.setText(e.text);
+        holder.title.setTextColor(c);
         holder.date.setText(java.text.DateFormat.getDateInstance().format(e.date.getTime()) + " " + java.text.DateFormat.getTimeInstance().format(e.date.getTime()));
     }
 

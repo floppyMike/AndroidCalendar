@@ -3,6 +3,7 @@ package com.example.androidcalendar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,8 +40,17 @@ public class DateList extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(rv.getContext())); // Linear list
     }
 
-    public void addDate(String text, Calendar time) {
-        Entry e = new Entry(text, time, 0);
+    public void addDate(String text, Calendar time, int imp) {
+        if (time.before(Calendar.getInstance())) { // Handle past problem
+            Toast.makeText(getContext(), "Discarding because date is in the past.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (text.isEmpty()) { // Handle empty text problem
+            Toast.makeText(getContext(), "Discarding because no text given.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Entry e = new Entry(text, time, imp);
         m_dao.insert(e);
         m_da.add(e);
     }

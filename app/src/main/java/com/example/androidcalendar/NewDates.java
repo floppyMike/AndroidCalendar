@@ -47,7 +47,7 @@ public class NewDates extends DateList {
         super.onViewCreated(v, savedInstanceState, rv, (v1, v2) -> Long.compare(v1, v2), dao.allFuture(Calendar.getInstance())); // Handle event fully
 
         // Add click listener
-        rv.setOnClickListener(v1 -> {
+        v.findViewById(R.id.newdate).setOnClickListener(v1 -> {
             startActivityForResult(new Intent(getActivity(), DateCreate.class), 0); // Start date creation
         });
 
@@ -72,7 +72,8 @@ public class NewDates extends DateList {
         if (resultCode == Activity.RESULT_OK)
             switch (requestCode) {
                 case 0:
-                    addDate(data.getStringExtra("text"), (Calendar) data.getSerializableExtra("date"));
+                    addDate(data.getStringExtra("text"), (Calendar) data.getSerializableExtra("date"),
+                            data.getIntExtra("important", 0));
                     break;
             }
     }

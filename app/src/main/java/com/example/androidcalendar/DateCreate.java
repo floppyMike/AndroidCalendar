@@ -21,7 +21,7 @@ import java.util.Locale;
 public class DateCreate extends AppCompatActivity {
 
     private TextView m_dateview, m_timeview;
-    private EditText m_edit;
+    private EditText m_edit, m_important;
     private Calendar m_date;
 
     @Override
@@ -33,6 +33,7 @@ public class DateCreate extends AppCompatActivity {
         m_dateview = (TextView) findViewById(R.id.add_dateview);
         m_timeview = (TextView) findViewById(R.id.add_timeview);
         m_edit = (EditText) findViewById(R.id.add_text);
+        m_important = (EditText) findViewById(R.id.add_importanttext);
 
         // Set default date
         m_date = Calendar.getInstance();
@@ -71,6 +72,7 @@ public class DateCreate extends AppCompatActivity {
 
         res.putExtra("date", m_date);
         res.putExtra("text", m_edit.getText().toString());
+        res.putExtra("important", Integer.parseInt(m_important.getText().toString()));
 
         setResult(Activity.RESULT_OK, res);
         finish();
